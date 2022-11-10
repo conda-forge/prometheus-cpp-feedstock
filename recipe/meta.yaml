@@ -11,10 +11,12 @@ source:
     sha256: 522b6a57f474c89098fcdf198bd63796c65ee2e07b85b1d118be8e8b47148188
 
 build:
-  number: 0
+  number: 1
   always_include_files:
     - lib/cmake/prometheus-cpp/           # [unix]
     - Library/lib/cmake/prometheus-cpp/   # [win]
+  run_exports:
+    - {{ pin_subpackage('prometheus-cpp', max_pin='x.x') }}
 
 requirements:
   build:
