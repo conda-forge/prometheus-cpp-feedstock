@@ -1,6 +1,6 @@
 # code: language: jinja-yaml
 {% set name = "prometheus-cpp" %}
-{% set version = "1.1.0" %}
+{% set version = "1.2.1" %}
 
 package:
   name: {{ name|lower }}
@@ -8,10 +8,10 @@ package:
 
 source:
   - url: https://github.com/jupp0r/prometheus-cpp/releases/download/v{{ version }}/prometheus-cpp-with-submodules.tar.gz
-    sha256: 522b6a57f474c89098fcdf198bd63796c65ee2e07b85b1d118be8e8b47148188
+    sha256: 594cac4b1c64024c62797bde071e09411a283882201f3ced10630d71e26937d3
 
 build:
-  number: 1
+  number: 0
   always_include_files:
     - lib/cmake/prometheus-cpp/           # [unix]
     - Library/lib/cmake/prometheus-cpp/   # [win]
