@@ -21,7 +21,9 @@ cmake --build . --parallel 4
 
 # run tests
 if [ "${build_platform}" == "${target_platform}" ]; then
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
     ctest -V
+fi
 fi 
 
 # install the libraries and headers
