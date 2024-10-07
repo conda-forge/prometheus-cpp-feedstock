@@ -11,7 +11,7 @@ source:
     sha256: 0d6852291063c35853e88805c73b52f73c0c08b78c1e7bc4d588fcf72a7172eb
 
 build:
-  number: 0
+  number: 1
   always_include_files:
     - lib/cmake/prometheus-cpp/           # [unix]
     - Library/lib/cmake/prometheus-cpp/   # [win]
@@ -20,6 +20,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     - cmake >=3.1
     - ninja
