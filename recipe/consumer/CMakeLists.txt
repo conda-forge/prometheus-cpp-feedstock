@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.15)
+project(prometheus_consumer LANGUAGES CXX)
+find_package(prometheus-cpp CONFIG REQUIRED)
+find_package(CURL REQUIRED)
+add_executable(prometheus_consumer main.cpp)
+target_compile_features(prometheus_consumer PRIVATE cxx_std_17)
+target_link_libraries(prometheus_consumer PRIVATE prometheus-cpp::core prometheus-cpp::pull prometheus-cpp::push CURL::libcurl)

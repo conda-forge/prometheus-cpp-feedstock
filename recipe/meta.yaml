@@ -11,7 +11,7 @@ source:
     sha256: 62bc2cc9772db2314dbaae506ae2a75c8ee897dab053d8729e86a637b018fdb6
 
 build:
-  number: 0
+  number: 1
   always_include_files:
     - lib/cmake/prometheus-cpp/           # [unix]
     - Library/lib/cmake/prometheus-cpp/   # [win]
@@ -37,6 +37,11 @@ requirements:
     - libcurl
 
 test:
+  requires:
+    - {{ compiler('cxx') }}  # [win and arm64]
+    - cmake  # [win and arm64]
+  files:
+    - consumer/  # [win and arm64]
   commands:
     - test -d $PREFIX/include/prometheus/                                   # [unix]
     - test -d $PREFIX/lib/cmake/prometheus-cpp/                             # [unix]
@@ -51,6 +56,13 @@ test:
     - if not exist %LIBRARY_LIB%\prometheus-cpp-core.lib exit 1                           # [win]
     - if not exist %LIBRARY_LIB%\prometheus-cpp-pull.lib exit 1                      # [win]
     - if not exist %LIBRARY_LIB%\prometheus-cpp-push.lib exit 1                      # [win]
+    - cmake -S consumer -B consumer-build -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%"  # [win and arm64]
+    - cmake --build consumer-build  # [win and arm64]
+    - consumer-build\prometheus_consumer.exe  # [win and arm64]
+    - dumpbin /headers consumer-build\prometheus_consumer.exe | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
+    - dumpbin /headers "%LIBRARY_BIN%\prometheus-cpp-core.dll" | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
+    - dumpbin /headers "%LIBRARY_BIN%\prometheus-cpp-pull.dll" | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
+    - dumpbin /headers "%LIBRARY_BIN%\prometheus-cpp-push.dll" | findstr /I /C:"AA64 machine (ARM64)"  # [win and arm64]
 
 about:
   home: https://github.com/jupp0r/prometheus-cpp

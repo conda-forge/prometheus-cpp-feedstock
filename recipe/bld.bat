@@ -1,4 +1,6 @@
 @echo on
+set "PROMETHEUS_TESTS=OFF"
+if "%target_platform%" == "win-arm64" set "PROMETHEUS_TESTS=ON"
 
 mkdir build-cpp
 if errorlevel 1 exit 1
@@ -12,14 +14,18 @@ cmake .. ^
     -DBUILD_SHARED_LIBS=ON ^
     -DENABLE_PUSH=ON ^
     -DENABLE_COMPRESSION=ON ^
-    -DENABLE_TESTING=OFF
-REM For some reason the example binary built with testing enabled fails
+    -DENABLE_TESTING=%PROMETHEUS_TESTS%
+if errorlevel 1 exit /b 1
 
 cmake --build . --parallel 4
 if errorlevel 1 exit 1
 
-REM run tests
-REM ctest -V
-
 REM install the libraries and headers
 cmake --install .
+if errorlevel 1 exit /b 1
+
+if "%target_platform%" == "win-arm64" (
+    set "PATH=%LIBRARY_BIN%;%PATH%"
+    ctest --output-on-failure -C Release
+    if errorlevel 1 exit /b 1
+)
